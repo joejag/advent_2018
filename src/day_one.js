@@ -2,25 +2,25 @@ import _ from 'lodash'
 
 const stringToNumbers = (number) => number.split(' ').map(Number)
 
+export const loopingArray = (array) => {
+  var index = 0
+  return () => {
+    if (index === array.length) index = 0
+    return array[index++]
+  }
+}
+
 export const addItUp = (mathBits) => _.sum(stringToNumbers(mathBits))
 
 export const findTheFreq = (mathBits) => {
-  var parts = stringToNumbers(mathBits)
-  const seenNumbers = []
-  var currentNumber = parts.shift()
+  const nextValue = loopingArray(stringToNumbers(mathBits))
+  const seenSums = [nextValue() + nextValue()]
 
-  while (parts.length !== 0) {
-    const nextNumber = parts.shift()
-    currentNumber = currentNumber + nextNumber
-    if (seenNumbers.includes(currentNumber)) {
-      return currentNumber
+  while (true) {
+    const nextSum = nextValue() + _.last(seenSums)
+    if (seenSums.includes(nextSum)) {
+      return nextSum
     }
-    seenNumbers.push(currentNumber)
-
-    if (parts.length === 0) {
-      parts = stringToNumbers(mathBits)
-    }
+    seenSums.push(nextSum)
   }
-
-  return currentNumber
 }
