@@ -26,8 +26,22 @@ export const coordsCovered = (elfString) => {
 export const overlapWithin = (elfStrings) => {
   const cords = elfStrings.map((elfString) => coordsCovered(elfString))
   const allCords = _.flatten(cords)
-
   const frequencies = _.countBy(allCords)
+
   return _.keys(_.pickBy(frequencies, (value, key) => value > 1))
     .map((cords) => cords.split(',').map(Number))
+}
+
+export const noOverlapId = (elfStrings) => {
+  const cordsWithDetails = elfStrings.map((elfString) =>
+    ({
+      details: parseElf(elfString),
+      cords: coordsCovered(elfString)
+    }))
+
+  const overlappingCords = overlapWithin(elfStrings)
+
+  return _.filter(cordsWithDetails, (candidate) =>
+    _.intersectionBy(candidate.cords, overlappingCords, (c) => c.toString()).length === 0
+  ).map((a) => a.details.id)[0]
 }

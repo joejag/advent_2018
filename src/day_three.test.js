@@ -1,4 +1,4 @@
-import { coordsCovered, parseElf, overlapWithin } from './day_three'
+import { coordsCovered, parseElf, noOverlapId, overlapWithin } from './day_three'
 
 it('can conver elf strings into something reasonable', () => {
   expect(parseElf('#123 @ 3,2: 3x2')).toEqual({
@@ -30,4 +30,12 @@ it('should find overlap', () => {
     [3, 3], [4, 3],
     [3, 4], [4, 4]
   ])
+})
+
+it('finds non-overlap,', () => {
+  expect(noOverlapId([
+    '#1 @ 1,3: 4x4',
+    '#2 @ 3,1: 4x4',
+    '#3 @ 5,5: 2x2'
+  ])).toEqual(3)
 })
