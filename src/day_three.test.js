@@ -1,6 +1,6 @@
 import { coordsCovered, parseElf, noOverlapId, overlapWithin } from './day_three'
 
-it('can conver elf strings into something reasonable', () => {
+it.only('can convert elf strings into something reasonable', () => {
   expect(parseElf('#123 @ 3,2: 3x2')).toEqual({
     id: 123,
     topLeft: { x: 3, y: 2 },

@@ -1,15 +1,15 @@
 import _ from 'lodash'
 
 export const parseElf = (elfString) => {
-  const bits = elfString.split(' ')
+  const elfClaimParts = /^#(\d*) @ (\d*),(\d*): (\d*)x(\d*)/.exec(elfString)
   return {
-    id: parseInt(bits[0].split('#')[1]),
+    id: parseInt(elfClaimParts[1]),
     topLeft: {
-      x: parseInt(bits[2].split(',')[0]),
-      y: parseInt(bits[2].replace(':', '').split(',')[1])
+      x: parseInt(elfClaimParts[2]),
+      y: parseInt(elfClaimParts[3])
     },
-    width: parseInt(bits[3].split('x')[0]),
-    height: parseInt(bits[3].split('x')[1])
+    width: parseInt(elfClaimParts[4]),
+    height: parseInt(elfClaimParts[5])
   }
 }
 
