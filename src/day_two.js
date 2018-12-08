@@ -1,11 +1,11 @@
 import _ from 'lodash'
 
-export const superSimilarWords = (wordsString) => {
+export const wordsWithOnlyOneCharacterDifference = (wordsString) => {
   const words = wordsString.split(' ')
   while (words.length !== 0) {
     const candidate = words.shift()
     const potentialMatches = words
-      .map((word) => differenceBetween(candidate, word))
+      .map((word) => sharedLettersInWordsWithOneDifference(candidate, word))
       .filter((letters) => letters.length > 0)
 
     if (potentialMatches.length > 0) {
@@ -15,7 +15,7 @@ export const superSimilarWords = (wordsString) => {
   return []
 }
 
-export const differenceBetween = (left, right) => {
+export const sharedLettersInWordsWithOneDifference = (left, right) => {
   const leftLetters = left.split('')
   const rightLetters = right.split('')
   const matchingLetters = _.zip(leftLetters, rightLetters)

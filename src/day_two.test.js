@@ -1,14 +1,14 @@
-import { letterOccurs, checkSum, differenceBetween, superSimilarWords } from './day_two'
+import { letterOccurs, checkSum, sharedLettersInWordsWithOneDifference, wordsWithOnlyOneCharacterDifference } from './day_two'
 
 it('tells difference between words', () => {
-  expect(differenceBetween('a', 'a')).toEqual([])
-  expect(differenceBetween('ab', 'ac')).toEqual(['a'])
-  expect(differenceBetween('abc', 'abc')).toEqual([])
+  expect(sharedLettersInWordsWithOneDifference('a', 'a')).toEqual([])
+  expect(sharedLettersInWordsWithOneDifference('ab', 'ac')).toEqual(['a'])
+  expect(sharedLettersInWordsWithOneDifference('abc', 'abc')).toEqual([])
 })
 
 it('find super similar words', () => {
   const example = 'abcde fghij klmno pqrst fguij axcye wvxyz'
-  expect(superSimilarWords(example)).toEqual('fgij')
+  expect(wordsWithOnlyOneCharacterDifference(example)).toEqual('fgij')
 })
 
 it('checksums', () => {
