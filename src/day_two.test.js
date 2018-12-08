@@ -1,4 +1,15 @@
-import { letterOccurs, checkSum } from './day_two'
+import { letterOccurs, checkSum, differenceBetween, superSimilarWords } from './day_two'
+
+it('tells difference between words', () => {
+  expect(differenceBetween('a', 'a')).toEqual([])
+  expect(differenceBetween('ab', 'ac')).toEqual(['a'])
+  expect(differenceBetween('abc', 'abc')).toEqual([])
+})
+
+it('find super similar words', () => {
+  const example = 'abcde fghij klmno pqrst fguij axcye wvxyz'
+  expect(superSimilarWords(example)).toEqual('fgij')
+})
 
 it('checksums', () => {
   expect(checkSum('abcdef bababc abbcde abcccd aabcdd abcdee ababab')).toBe(12)
