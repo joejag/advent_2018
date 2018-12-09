@@ -46,12 +46,18 @@ export const analyseGuard = (events) => {
   const frequencyOfMostSleepyMinute = _.countBy(
     _.flatten(
       _.map(sleepPortions, (p) => _.range(p[0], p[1]))))
-  const mostSleepyMinute = parseInt(
-    _.head(
-      _.maxBy(
-        _.entries(frequencyOfMostSleepyMinute), '[1]')))
+  const mostSleepyMinute =
+      _.maxBy(_.entries(frequencyOfMostSleepyMinute), '[1]')
 
-  return { sleepPortions, totalSleep, mostSleepyMinute }
+  return {
+    sleepPortions,
+    totalSleep,
+    mostSleepyMinute: parseInt(_.head(mostSleepyMinute)),
+    mostSleepy: {
+      minute: parseInt(_.head(mostSleepyMinute)),
+      timesAsleep: parseInt(_.tail(mostSleepyMinute))
+    }
+  }
 }
 
 export const findSleepyGuard = (rawEvents) => {
@@ -63,20 +69,36 @@ export const findSleepyGuard = (rawEvents) => {
       data: analyseGuard(guardEvents)
     }
   })
-  const sleepyGuard = _.maxBy(summaryPerGuard,
-    (s) => s.data.totalSleep)
+  const sleepyGuard = _.maxBy(summaryPerGuard, (s) => s.data.totalSleep)
   return {
     minuteToGo: sleepyGuard.data.mostSleepyMinute,
     guardId: sleepyGuard.guardId
   }
 }
 
-export const magicNumber = (rawEvents) => {
-  const result = findSleepyGuard(rawEvents)
-  return result.guardId * result.minuteToGo
+export const findSleepestMinute = (rawEvents) => {
+  const events = parseEvents(rawEvents)
+  const eventsByGuard = _.groupBy(events, 'guardId')
+  const summaryPerGuard = _.map(eventsByGuard, (guardEvents, guardId) => {
+    return {
+      guardId: parseInt(guardId),
+      data: analyseGuard(guardEvents)
+    }
+  })
+
+  const sleepyGuard = _.maxBy(summaryPerGuard, (s) => s.data.mostSleepy.timesAsleep)
+  return {
+    minuteMostAsleep: sleepyGuard.data.mostSleepyMinute,
+    guardId: sleepyGuard.guardId
+  }
 }
 
 export default () => {
   const dayFourInput = fs.readFileSync('./src/day_04.txt').toString().split('\n').sort()
-  console.log('4.1:', magicNumber(dayFourInput))
+
+  const result1 = findSleepyGuard(dayFourInput)
+  console.log('4.1:', result1.guardId * result1.minuteToGo)
+
+  const result2 = findSleepestMinute(dayFourInput)
+  console.log('4.2:', result2.guardId * result2.minuteMostAsleep)
 }

@@ -1,4 +1,4 @@
-import { analyseGuard, parseEvents, findSleepyGuard } from './day_04'
+import { analyseGuard, parseEvents, findSleepyGuard, findSleepestMinute } from './day_04'
 
 const exampleInput = [
   '[1518-11-01 00:00] Guard #10 begins shift',
@@ -55,7 +55,11 @@ it('analyse a single guards data', () => {
     .toEqual({
       sleepPortions: [[10, 19], [18, 30]],
       totalSleep: 21,
-      mostSleepyMinute: 18
+      mostSleepyMinute: 18,
+      mostSleepy: {
+        minute: 18,
+        timesAsleep: 2
+      }
     })
 })
 
@@ -76,5 +80,11 @@ it('should find the most sleepy guard', () => {
 it('should find the most sleepy guard from examples', () => {
   expect(findSleepyGuard(exampleInput)).toEqual({
     minuteToGo: 24, guardId: 10
+  })
+})
+
+it('should find the guard with the sleepest minute', () => {
+  expect(findSleepestMinute(exampleInput)).toEqual({
+    minuteMostAsleep: 45, guardId: 99
   })
 })
