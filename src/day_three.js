@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import fs from 'fs'
 
 export const parseElf = (elfString) => {
   const elfClaimParts = /^#(\d*) @ (\d*),(\d*): (\d*)x(\d*)/.exec(elfString)
@@ -44,4 +45,10 @@ export const noOverlapId = (elfStrings) => {
   return _.filter(cordsWithDetails, (candidate) =>
     _.intersectionBy(candidate.cords, overlappingCords, (c) => c.toString()).length === 0
   ).map((a) => a.details.id)[0]
+}
+
+export default () => {
+  const dayThreeInput = fs.readFileSync('./src/day_three.txt').toString().split('\n')
+  console.log('3.1:', overlapWithin(dayThreeInput).length)
+  // console.log('3.2:', noOverlapId(dayThreeInput))
 }

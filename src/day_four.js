@@ -1,4 +1,6 @@
+import fs from 'fs'
 import _ from 'lodash'
+
 export const parseEvents = (events) => {
   const eventExpression = /^\[(?:\d*)-(?:\d*)-(?:\d*) (?:\d*):(\d*)\] (.*)$/
 
@@ -72,4 +74,9 @@ export const findSleepyGuard = (rawEvents) => {
 export const magicNumber = (rawEvents) => {
   const result = findSleepyGuard(rawEvents)
   return result.guardId * result.minuteToGo
+}
+
+export default () => {
+  const dayFourInput = fs.readFileSync('./src/day_four.txt').toString().split('\n').sort()
+  console.log('4.1:', magicNumber(dayFourInput))
 }
