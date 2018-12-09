@@ -77,6 +77,6 @@ export const magicNumber = (rawEvents) => {
 }
 
 export default () => {
-  const dayFourInput = fs.readFileSync('./src/day_four.txt').toString().split('\n').sort()
+  const dayFourInput = fs.readFileSync('./src/day_04.txt').toString().split('\n').sort()
   console.log('4.1:', magicNumber(dayFourInput))
 }

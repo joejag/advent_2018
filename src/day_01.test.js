@@ -1,4 +1,4 @@
-import { addItUp, findTheFreq, loopingArray } from './day_one'
+import { addItUp, findTheFreq, loopingArray } from './day_01'
 
 test('+1, +1, -2 results in 0', () => expect(addItUp('+1 +1 -2')).toBe(0))
 test('+1, +1, +1 results in  3', () => expect(addItUp('+1 +1 +1')).toBe(3))

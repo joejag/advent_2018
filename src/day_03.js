@@ -48,7 +48,7 @@ export const noOverlapId = (elfStrings) => {
 }
 
 export default () => {
-  const dayThreeInput = fs.readFileSync('./src/day_three.txt').toString().split('\n')
+  const dayThreeInput = fs.readFileSync('./src/day_03.txt').toString().split('\n')
   console.log('3.1:', overlapWithin(dayThreeInput).length)
-  // console.log('3.2:', noOverlapId(dayThreeInput))
+  console.log('3.2:', noOverlapId(dayThreeInput))
 }

@@ -1,4 +1,4 @@
-import { letterOccurs, checkSum, sharedLettersInWordsWithOneDifference, wordsWithOnlyOneCharacterDifference } from './day_two'
+import { letterOccurs, checkSum, sharedLettersInWordsWithOneDifference, wordsWithOnlyOneCharacterDifference } from './day_02'
 
 it('tells difference between words', () => {
   expect(sharedLettersInWordsWithOneDifference('a', 'a')).toEqual([])

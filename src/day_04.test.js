@@ -1,4 +1,4 @@
-import { analyseGuard, parseEvents, findSleepyGuard } from './day_four'
+import { analyseGuard, parseEvents, findSleepyGuard } from './day_04'
 
 const exampleInput = [
   '[1518-11-01 00:00] Guard #10 begins shift',
