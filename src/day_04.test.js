@@ -55,10 +55,9 @@ it('analyse a single guards data', () => {
     .toEqual({
       sleepPortions: [[10, 19], [18, 30]],
       totalSleep: 21,
-      mostSleepyMinute: 18,
       mostSleepy: {
         minute: 18,
-        timesAsleep: 2
+        frequency: 2
       }
     })
 })
@@ -73,13 +72,13 @@ it('should find the most sleepy guard', () => {
     '[1518-11-02 00:20] wakes up',
     '[1518-11-02 00:19] falls asleep',
     '[1518-11-02 00:30] wakes up'])).toEqual({
-    minuteToGo: 19, guardId: 10
+    minuteMostAsleep: 19, guardId: 10
   })
 })
 
 it('should find the most sleepy guard from examples', () => {
   expect(findSleepyGuard(exampleInput)).toEqual({
-    minuteToGo: 24, guardId: 10
+    minuteMostAsleep: 24, guardId: 10
   })
 })
 

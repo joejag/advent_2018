@@ -52,52 +52,44 @@ export const analyseGuard = (events) => {
   return {
     sleepPortions,
     totalSleep,
-    mostSleepyMinute: parseInt(_.head(mostSleepyMinute)),
     mostSleepy: {
       minute: parseInt(_.head(mostSleepyMinute)),
-      timesAsleep: parseInt(_.tail(mostSleepyMinute))
+      frequency: parseInt(_.tail(mostSleepyMinute))
     }
+  }
+}
+
+const findSleepyGuardBy = (rawEvents, decidingFactor) => {
+  const events = parseEvents(rawEvents)
+  const eventsByGuard = _.groupBy(events, 'guardId')
+  const summaryPerGuard = _.map(eventsByGuard, (guardEvents, guardId) => {
+    return {
+      guardId: parseInt(guardId),
+      data: analyseGuard(guardEvents)
+    }
+  })
+  const sleepyGuard = _.maxBy(summaryPerGuard, decidingFactor)
+  return {
+    minuteMostAsleep: sleepyGuard.data.mostSleepy.minute,
+    guardId: sleepyGuard.guardId
   }
 }
 
 export const findSleepyGuard = (rawEvents) => {
-  const events = parseEvents(rawEvents)
-  const eventsByGuard = _.groupBy(events, 'guardId')
-  const summaryPerGuard = _.map(eventsByGuard, (guardEvents, guardId) => {
-    return {
-      guardId: parseInt(guardId),
-      data: analyseGuard(guardEvents)
-    }
-  })
-  const sleepyGuard = _.maxBy(summaryPerGuard, (s) => s.data.totalSleep)
-  return {
-    minuteToGo: sleepyGuard.data.mostSleepyMinute,
-    guardId: sleepyGuard.guardId
-  }
+  return findSleepyGuardBy(rawEvents,
+    (s) => s.data.totalSleep)
 }
 
 export const findSleepestMinute = (rawEvents) => {
-  const events = parseEvents(rawEvents)
-  const eventsByGuard = _.groupBy(events, 'guardId')
-  const summaryPerGuard = _.map(eventsByGuard, (guardEvents, guardId) => {
-    return {
-      guardId: parseInt(guardId),
-      data: analyseGuard(guardEvents)
-    }
-  })
-
-  const sleepyGuard = _.maxBy(summaryPerGuard, (s) => s.data.mostSleepy.timesAsleep)
-  return {
-    minuteMostAsleep: sleepyGuard.data.mostSleepyMinute,
-    guardId: sleepyGuard.guardId
-  }
+  return findSleepyGuardBy(rawEvents,
+    (s) => s.data.mostSleepy.frequency)
 }
 
 export default () => {
   const dayFourInput = fs.readFileSync('./src/day_04.txt').toString().split('\n').sort()
 
   const result1 = findSleepyGuard(dayFourInput)
-  console.log('4.1:', result1.guardId * result1.minuteToGo)
+  console.log('4.1:', result1.guardId * result1.minuteMostAsleep)
 
   const result2 = findSleepestMinute(dayFourInput)
   console.log('4.2:', result2.guardId * result2.minuteMostAsleep)
