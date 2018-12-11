@@ -1,4 +1,4 @@
-import { coordidinatesWithin, isEdgeCord, nearestInManhatten, manhattenDistance, chronalCoordinates } from './day_06'
+import { coordidinatesWithin, findSafeZone, isEdgeCord, nearestInManhatten, manhattenDistance, chronalCoordinates, sumOfManhattensToPoint } from './day_06'
 
 it('can make an appropriately sized grid', () => {
   expect(coordidinatesWithin([[1, 2]])).toEqual(
@@ -45,4 +45,15 @@ it('can find edge cords', () => {
   expect(isEdgeCord([1, 1], [[1, 2], [3, 3]])).toBe(false)
   expect(isEdgeCord([2, 1], [[1, 2], [3, 3]])).toBe(false)
   expect(isEdgeCord([1, 3], [[1, 2], [3, 3]])).toBe(true)
+})
+
+it('finds range in the middle of all cords', () => {
+  const cords = [[1, 1], [1, 6], [8, 3], [3, 4], [5, 5], [8, 9]]
+  expect(findSafeZone(cords, 32)).toEqual(16)
+})
+
+it('sum of manhattens to a point', () => {
+  const cords = [[1, 1], [1, 6], [8, 3], [3, 4], [5, 5], [8, 9]]
+  expect(sumOfManhattensToPoint([4, 3], cords)).toEqual(30)
+  expect(sumOfManhattensToPoint([1, 1], [[2, 2]])).toEqual(2)
 })

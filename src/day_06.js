@@ -43,7 +43,6 @@ export const isEdgeCord = (cord, cords) => {
 
 export const chronalCoordinates = (cords) => {
   const cordsToCheckForArea = coordidinatesWithin(cords)
-
   const calculateDistances = _.map(cordsToCheckForArea, (cord) => {
     return {
       cord: cord,
@@ -56,12 +55,11 @@ export const chronalCoordinates = (cords) => {
   _.uniq(
     _.map(_.filter(calculateDistances, (cd) => cd.edge === true),
       (livingOnTheEdge) => livingOnTheEdge.nearestCord))
-  const finiteCords = _.difference(cords, infiniteCords)
 
   const placesToCount =
   _.countBy(
     _.filter(calculateDistances, (cd) => {
-      return finiteCords.includes(cd.nearestCord)
+      return !infiniteCords.includes(cd.nearestCord)
     })
     , (cd) => cd.nearestCord)
 
@@ -72,9 +70,27 @@ export const chronalCoordinates = (cords) => {
   }
 }
 
+export const findSafeZone = (cords, limit) => {
+  const distances = _.map(coordidinatesWithin(cords), (c) => {
+    return {
+      distance: sumOfManhattensToPoint(c, cords),
+      cord: c
+    }
+  })
+
+  const safeZones = _.filter(distances, (d) => d.distance < limit)
+  return safeZones.length
+}
+
+export const sumOfManhattensToPoint = (cord, cords) => {
+  return _.sum(
+    _.map(cords, (c) => manhattenDistance(cord, c)))
+}
+
 export default () => {
   const input = fs.readFileSync('./src/day_06.txt').toString().split('\n')
   const inputParsed = _.map(input, (line) => line.split(',').map(Number))
 
   console.log('6.1', chronalCoordinates(inputParsed))
+  console.log('6.2', findSafeZone(inputParsed, 10000))
 }
