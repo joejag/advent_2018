@@ -4,10 +4,12 @@ import dayThree from './day_03'
 import dayFour from './day_04'
 import dayFive from './day_05'
 import daySix from './day_06'
+import daySeven from './day_07'
 
 // dayOne() // SLOW!
 // dayTwo()
 // dayThree() // SLOW!
 // dayFour()
 // dayFive()
-daySix()
+// daySix()
+daySeven()
