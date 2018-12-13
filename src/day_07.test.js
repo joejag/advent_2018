@@ -1,4 +1,4 @@
-import { findMainParent, prequisites, nextItem, readInstruction, stepsOrderFor } from './day_07'
+import { calculatePrequisites, nextStep, readInstruction, stepsOrderFor } from './day_07'
 
 it('can work out steps', () => {
   const steps = [
@@ -20,23 +20,15 @@ it('parses instructions', () => {
     .toEqual({ parent: 'C', child: 'F' })
 })
 
-it('can find the main parent', () => {
-  expect(findMainParent([
-    { parent: 'A', child: 'B' },
-    { parent: 'B', child: 'C' },
-    { parent: 'P', child: 'A' }
-  ])).toEqual('P')
-})
-
 it('works out pre-requisites', () => {
-  expect(prequisites([
+  expect(calculatePrequisites([
     { parent: 'A', child: 'B' }
   ])).toEqual([
     { step: 'A', prereq: [] },
     { step: 'B', prereq: ['A'] }
   ])
 
-  expect(prequisites([
+  expect(calculatePrequisites([
     { parent: 'A', child: 'B' },
     { parent: 'B', child: 'C' },
     { parent: 'P', child: 'A' }
@@ -49,24 +41,24 @@ it('works out pre-requisites', () => {
 })
 
 it('works out order', () => {
-  expect(nextItem([
+  expect(nextStep([
     { step: 'A', prereq: [] },
     { step: 'B', prereq: ['A'] }
   ],
   [])).toEqual('A')
 
-  expect(nextItem([
+  expect(nextStep([
     { step: 'A', prereq: [] },
     { step: 'B', prereq: ['A'] }
   ], ['A'])).toEqual('B')
 
-  expect(nextItem([
+  expect(nextStep([
     { step: 'A', prereq: [] },
     { step: 'B', prereq: ['C'] },
     { step: 'C', prereq: ['A'] }
   ], ['A'])).toEqual('C')
 
-  expect(nextItem([
+  expect(nextStep([
     { step: 'A', prereq: [] },
     { step: 'B', prereq: ['A'] },
     { step: 'C', prereq: ['A'] }

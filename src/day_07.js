@@ -9,39 +9,30 @@ export const readInstruction = (line) => {
   }
 }
 
-export const findMainParent = (relations) => {
-  const children = _.map(relations, (r) => r.child)
-  return _.find(relations, (r) => !children.includes(r.parent)).parent
-}
-
-export const prequisites = (relations) => {
+export const calculatePrequisites = (relations) => {
   const steps = _.sortBy(_.uniq(_.flatten(_.map(relations, (r) => [r.parent, r.child]))))
   return _.map(steps, (s) => {
-    const prereqs =
-    _.map(
-      _.filter(relations, (r) => r.child === s),
-      (s) => s.parent)
+    const preReqRelations = _.filter(relations, (r) => r.child === s)
     return {
       step: s,
-      prereq: prereqs
+      prereq: _.map(preReqRelations, (s) => s.parent)
     }
   })
 }
 
-export const nextItem = (steps, completedSteps) => {
-  const availableSteps = _.filter(steps, (s) => {
-    return _.difference(s.prereq, completedSteps).length === 0 &&
-     !_.includes(completedSteps, s.step)
-  })
-  return availableSteps[0].step
+export const nextStep = (steps, completedSteps) => {
+  return _.find(steps, (s) => {
+    const prequisitesCompleted = _.difference(s.prereq, completedSteps).length === 0
+    const hasntAlreadyRun = !_.includes(completedSteps, s.step)
+    return prequisitesCompleted && hasntAlreadyRun
+  }).step
 }
 
 export const stepsOrderFor = (input) => {
-  const parsedSteps = input.map(readInstruction)
-  const steps = prequisites(parsedSteps)
+  const steps = calculatePrequisites(input.map(readInstruction))
   let completedSteps = []
   while (completedSteps.length !== steps.length) {
-    completedSteps.push(nextItem(steps, completedSteps))
+    completedSteps.push(nextStep(steps, completedSteps))
   }
   return _.join(completedSteps, '')
 }
