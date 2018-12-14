@@ -1,4 +1,4 @@
-import { calculatePrequisites, nextStep, readInstruction, stepsOrderFor } from './day_07'
+import { partTwo, timeToComplete, calculatePrequisites, nextStep, readInstruction, stepsOrderFor } from './day_07'
 
 it('can work out steps', () => {
   const steps = [
@@ -45,22 +45,42 @@ it('works out order', () => {
     { step: 'A', prereq: [] },
     { step: 'B', prereq: ['A'] }
   ],
-  [])).toEqual('A')
+  []).step).toEqual('A')
 
   expect(nextStep([
     { step: 'A', prereq: [] },
     { step: 'B', prereq: ['A'] }
-  ], ['A'])).toEqual('B')
+  ], ['A']).step).toEqual('B')
 
   expect(nextStep([
     { step: 'A', prereq: [] },
     { step: 'B', prereq: ['C'] },
     { step: 'C', prereq: ['A'] }
-  ], ['A'])).toEqual('C')
+  ], ['A']).step).toEqual('C')
 
   expect(nextStep([
     { step: 'A', prereq: [] },
     { step: 'B', prereq: ['A'] },
     { step: 'C', prereq: ['A'] }
-  ], ['A'])).toEqual('B')
+  ], ['A']).step).toEqual('B')
+})
+
+it('knows how long a step takes', () => {
+  expect(timeToComplete('A')).toEqual(1)
+  expect(timeToComplete('a')).toEqual(1)
+  expect(timeToComplete('Z')).toEqual(26)
+})
+
+it('should consider time', () => {
+  const steps = [
+    'Step C must be finished before step A can begin.',
+    'Step C must be finished before step F can begin.',
+    'Step A must be finished before step B can begin.',
+    'Step A must be finished before step D can begin.',
+    'Step B must be finished before step E can begin.',
+    'Step D must be finished before step E can begin.',
+    'Step F must be finished before step E can begin.']
+
+  expect(partTwo(steps, 1)).toEqual(21)
+  expect(partTwo(steps, 2)).toEqual(15)
 })
