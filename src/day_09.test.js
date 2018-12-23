@@ -1,8 +1,15 @@
-import { nextTurn, playMarbles } from './day_09'
+import _ from 'lodash'
+import { LinkedList, nextTurn, playMarbles } from './day_09'
 
-it('knows the next turn', () => {
-  expect(nextTurn({ turn: 0, players: 9, player: null, current: 0, marbles: [0] })
-    .marbles).toEqual([0, 1])
+const linky = (array) => {
+  const list = new LinkedList(_.head(array))
+  _.each(_.tail(array), (x) => list.insert(x))
+  return list
+}
+
+it.only('knows the next turn', () => {
+  expect(nextTurn({ turn: 0, players: 9, player: null, current: 0, marbles: linky([0]) })
+    .marbles).toEqual(linky([0, 1]))
   expect(nextTurn({ turn: 1, players: 9, player: 1, current: 1, marbles: [0, 1] })
     .marbles).toEqual([0, 2, 1])
   expect(nextTurn({ turn: 2, players: 9, player: 2, current: 2, marbles: [0, 2, 1] })
@@ -51,4 +58,46 @@ it('handles the one after 23 well', () => {
 it('plays the game and calculates a high score', () => {
   expect(playMarbles({ players: 10, turns: 1618 })).toEqual(['10', 8317])
   expect(playMarbles({ players: 13, turns: 7999 })).toEqual(['12', 146373])
+})
+
+describe('LinkedList', () => {
+  it('can loop around', () => {
+    const list = new LinkedList(0)
+    list.insert(10)
+    list.insert(20)
+    expect(list.current.value).toBe(20)
+    expect(list.current.next.value).toBe(0)
+    expect(list.current.prev.value).toBe(10)
+    expect(list.current.prev.prev.value).toBe(0)
+  })
+  it('can be moved forward', () => {
+    const list = new LinkedList(1)
+    list.insert(2)
+    list.insert(3)
+    list.insert(4)
+    list.insert(5)
+    list.moveClockwise()
+    list.moveClockwise()
+    expect(list.current.value).toBe(2)
+  })
+  it('can move backward', () => {
+    const list = new LinkedList(1)
+    list.insert(2)
+    list.insert(3)
+    list.insert(4)
+    list.insert(5)
+    list.moveAntiClockwise()
+    expect(list.current.value).toBe(4)
+  })
+  it('can remove nodes', () => {
+    const list = new LinkedList(1)
+    list.insert(2)
+    list.insert(3)
+    list.insert(4)
+    list.insert(5)
+    expect(list.remove()).toBe(5)
+    expect(list.current.value).toBe(1)
+    list.moveAntiClockwise()
+    expect(list.current.value).toBe(4)
+  })
 })

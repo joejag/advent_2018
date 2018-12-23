@@ -68,6 +68,55 @@ export const playMarbles = ({ players, turns }) => {
   return _.maxBy(scoresByPlayerAdded, '[1]')
 }
 
+// export default () => {
+//   console.log('8.1', playMarbles({ players: 413, turns: 71082 }))
+// }
+
 export default () => {
-  console.log('8.1', playMarbles({ players: 413, turns: 71082 }))
+  // console.log('8.1', playMarbles({ players: 413, turns: 71082 }))
+  var start = new Date().getTime()
+  playMarbles({ players: 413, turns: 10000 })
+  var elapsed = new Date().getTime() - start
+  console.log(elapsed)
+}
+
+export class LinkedList {
+  constructor (value) {
+    this.current = new Node(value, null, null)
+    this.current.next = this.current
+    this.current.prev = this.current
+  }
+
+  insert (value) {
+    const newNode = new Node(value, this.current.next, this.current)
+    this.current.next = newNode
+    this.current = newNode
+  }
+
+  remove () {
+    const oldNext = this.current.next
+    const oldPrev = this.current.prev
+    oldNext.prev = oldPrev
+    oldPrev.next = oldNext
+
+    const oldValue = this.current.value
+    this.current = this.current.next
+    return oldValue
+  }
+
+  moveClockwise () {
+    this.current = this.current.next
+  }
+
+  moveAntiClockwise () {
+    this.current = this.current.prev
+  }
+}
+
+class Node {
+  constructor (value, next, prev) {
+    this.value = value
+    this.next = next
+    this.prev = prev
+  }
 }
