@@ -7,27 +7,20 @@ const calculateNextPlayer = ({ player, players }) => {
   return player + 1
 }
 
-const calculateWhereNextMarbleInsertionWillBe = (marbles, current) => {
-  const indexOfCurrent = _.indexOf(marbles, current)
-  if (indexOfCurrent === marbles.length - 1) {
-    return 1
-  }
-  return indexOfCurrent + 2
-}
-
-const calculateNormalMarbleProgression = ({ turn, current, marbles, scoreEvents }) => {
+const calculateNormalMarbleProgression = ({ turn, marbles, scoreEvents }) => {
   const nextMarble = turn + 1
-  marbles.splice(calculateWhereNextMarbleInsertionWillBe(marbles, current), 0, nextMarble)
+  marbles.moveClockwise()
+  marbles.insert(nextMarble)
   return {
     current: nextMarble,
     scoreEvents: scoreEvents,
     marbles: marbles }
 }
 
-const calculateTheTwentyThreesMarbleProgression = ({ turn, marbles, current, player, scoreEvents }) => {
-  const indexOfCurrent = _.indexOf(marbles, current)
-  const nextMarble = _.nth(marbles, indexOfCurrent - 6)
-  const removedMarble = _.head(marbles.splice(indexOfCurrent - 7, 1))
+const calculateTheTwentyThreesMarbleProgression = ({ turn, marbles, player, scoreEvents }) => {
+  _.times(7, () => marbles.moveAntiClockwise())
+  const removedMarble = marbles.remove()
+  const nextMarble = marbles.current.value
   scoreEvents.push({ player: player + 1, keeps: [removedMarble, turn + 1] })
   return {
     current: nextMarble,
@@ -39,7 +32,7 @@ export const nextTurn = (previousTurn) => {
   const nextPlayer = calculateNextPlayer(previousTurn)
 
   let nextMarbles
-  if ((previousTurn.current + 1) % 23 === 0) {
+  if ((previousTurn.turn + 1) % 23 === 0) {
     nextMarbles = calculateTheTwentyThreesMarbleProgression(previousTurn)
   } else {
     nextMarbles = calculateNormalMarbleProgression(previousTurn)
@@ -53,12 +46,10 @@ export const nextTurn = (previousTurn) => {
 }
 
 export const playMarbles = ({ players, turns }) => {
-  let previousGame = { turn: 0, players, player: null, scoreEvents: [], current: 0, marbles: [0] }
+  let previousGame = { turn: 0, players, player: null, scoreEvents: [], current: 0, marbles: new LinkedList(0) }
   let turnsLeft = turns
+
   while (turnsLeft > 0) {
-    if (turnsLeft % 1000 === 0) {
-      // console.log('turn', turnsLeft)
-    }
     previousGame = nextTurn(previousGame)
     turnsLeft = turnsLeft - 1
   }
@@ -68,16 +59,9 @@ export const playMarbles = ({ players, turns }) => {
   return _.maxBy(scoresByPlayerAdded, '[1]')
 }
 
-// export default () => {
-//   console.log('8.1', playMarbles({ players: 413, turns: 71082 }))
-// }
-
 export default () => {
-  // console.log('8.1', playMarbles({ players: 413, turns: 71082 }))
-  var start = new Date().getTime()
-  playMarbles({ players: 413, turns: 10000 })
-  var elapsed = new Date().getTime() - start
-  console.log(elapsed)
+  console.log('8.1', playMarbles({ players: 413, turns: 71082 }))
+  console.log('8.2', playMarbles({ players: 413, turns: 71082 * 100 }))
 }
 
 export class LinkedList {
@@ -85,15 +69,24 @@ export class LinkedList {
     this.current = new Node(value, null, null)
     this.current.next = this.current
     this.current.prev = this.current
+    this.head = this.current
   }
 
   insert (value) {
     const newNode = new Node(value, this.current.next, this.current)
+    this.current.next.prev = newNode
     this.current.next = newNode
     this.current = newNode
+    if (this.current.next.value === this.head.value) {
+      this.head.prev = this.current
+    }
   }
 
   remove () {
+    if (this.current.value === this.head.value) {
+      this.head = this.head.next
+    }
+
     const oldNext = this.current.next
     const oldPrev = this.current.prev
     oldNext.prev = oldPrev
@@ -110,6 +103,27 @@ export class LinkedList {
 
   moveAntiClockwise () {
     this.current = this.current.prev
+  }
+
+  toArray () {
+    const goBackHere = this.current
+    while (this.current !== this.head) {
+      this.moveClockwise()
+    }
+
+    const result = [this.current.value]
+    this.moveClockwise()
+
+    while (this.current !== this.head) {
+      result.push(this.current.value)
+      this.moveClockwise()
+    }
+
+    while (this.current !== goBackHere) {
+      this.moveClockwise()
+    }
+
+    return result
   }
 }
 
